@@ -1,0 +1,156 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arras Verify</title>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href=icon.png type="image/x-icon">
+    <script src="index.js" defer></script>
+  </head>
+  <body>
+    <div id="container">
+      <h1>Arras Verify</h1>
+      <div id="serverStatus">Loading server status...</div>
+      <nav>
+        <button id="navVerify"><i class="fas fa-check-circle"></i> Verify</button>
+        <button id="navUsers"><i class="fas fa-users"></i> Users</button>
+        <button id="navChat"><i class="fas fa-comments"></i> Chat</button>
+        <button id="navRules"><i class="fas fa-gavel"></i> Rules</button>
+        <button id="navDatabase" class="hidden"><i class="fas fa-database"></i> Database</button>
+        <button id="navDeveloper" class="hidden"><i class="fas fa-code"></i> Developer</button>
+        <button id="navChangelog"><i class="fas fa-clipboard-list"></i> Updates</button>
+        <button id="navSettings"><i class="fas fa-cog"></i> Settings</button>
+        <button id="navSpecial"><i class="fas fa-star"></i> Special</button>
+      </nav>
+      <section id="verificationSection">
+        <h2><i class="fas fa-user-check"></i> User Verification</h2>
+        <input id="codeInput" type="text" placeholder="enter code...">
+        <button id="verifyCode"><i class="fas fa-check"></i> verify</button>
+        <p id="verifyStatus">Enter your verification code to access the system.</p>
+      </section>
+      <section id="usersSection" class="hidden">
+        <h2><i class="fas fa-users"></i> Verified Users</h2>
+        <p id="verified">0 users are currently verified.</p>
+      </section>
+      <section id="chatSection" class="hidden">
+        <div id="chatHeader">
+          <h2><i class="fas fa-comments"></i> Chat</h2>
+        </div>
+        <div id="chatMessages"></div>
+        <div id="chatFooter">
+          <input id="usernameInput" type="text" placeholder="Enter username...">
+          <br>
+          <br>
+          <input id="chatInput" type="text" placeholder="Enter message..." disabled>
+          <button id="sendChat" disabled><i class="fas fa-paper-plane"></i> Send</button>
+        </div>
+      </section>
+      <section id="rulesSection" class="hidden">
+        <h2><i class="fas fa-gavel"></i> Rules</h2>
+        <ul>
+          <li><i class="fas fa-check-circle"></i> Be respectful to all users</li>
+          <li><i class="fas fa-check-circle"></i> Do not spam in the chat</li>
+          <li><i class="fas fa-check-circle"></i> Do not use offensive language or harassment</li>
+          <li><i class="fas fa-check-circle"></i> Do not share personal information</li>
+          <li><i class="fas fa-check-circle"></i> Do not advertising or promotion without permission</li>
+          <li><i class="fas fa-check-circle"></i> Do not post NSFW content</li>
+          <li><i class="fas fa-check-circle"></i> Do not attempt to bypass security measures</li>
+        </ul>
+        <h5><i class="fas fa-exclamation-triangle"></i> 1 Warn = 10mins timeout => 3 Warns = 50mins timeout => 5 warns = 2hr timeout+media ban => 12 warns = temp ban</h5>
+      </section>
+      <section id="databaseSection" class="hidden">
+        <h2><i class="fas fa-database"></i> Database</h2>
+        <p>Managers may only delete or create codes with rank "user".</p>
+        <div id="databaseContainer">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Code</th>
+                <th>Role</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="database"></tbody>
+          </table>
+        </div>
+      </section>
+      <section id="developerSection" class="hidden">
+        <h2><i class="fas fa-code"></i> Developer Tools</h2>
+        <h3><i class="fas fa-plus-circle"></i> Add a code</h3>
+        <input id="newNameInput" type="text" placeholder="Enter name...">
+        <input id="newRankInput" type="text" placeholder="Enter rank...">
+        <input id="newCodeInput" type="text" placeholder="Enter code...">
+        <button id="newCodeButton"><i class="fas fa-plus"></i> Create Code</button>
+      </section>
+      <section id="changelogSection" class="hidden">
+        <h2><i class="fas fa-clipboard-list"></i> Changelog</h2>
+        <div class="changelog-entry">
+          <h3><i class="fas fa-code-branch"></i> Version 0.0.2</h3>
+          <ul>
+            <li><i class="fas fa-bug"></i> fixed chat messages not being sent</li>
+          </ul>
+        </div>
+        <div class="changelog-entry">
+          <h3><i class="fas fa-code-branch"></i> Version 0.0.1</h3>
+          <ul>
+            <li><i class="fas fa-rocket"></i> Wowza this really almost looks like the original one!</li>
+            <li><i class="fas fa-plus"></i> Added 4 new tabs, rules, changelog, settings & special</li>
+          </ul>
+        </div>
+      </section>
+      <section id="settingsSection" class="hidden">
+        <h2><i class="fas fa-cog"></i> Theme Settings</h2>
+        
+        <h3><i class="fas fa-palette"></i> Default Themes</h3>
+        <div class="theme-buttons">
+          <button class="theme-btn active" data-theme="default"><i class="fas fa-home"></i> Default</button>
+          <button class="theme-btn" data-theme="orange"> Orange</button>
+          <button class="theme-btn" data-theme="pink">Pink</button>
+          <button class="theme-btn" data-theme="green">Green</button>
+          <button class="theme-btn" data-theme="red">Red</button>
+          <button class="theme-btn" data-theme="dark">Dark</button>
+          <button class="theme-btn" data-theme="light">Light</button>
+          <button class="theme-btn" data-theme="rainbow">Rainbow</button>
+        </div>
+        
+        <h3><i class="fas fa-sliders-h"></i> Custom Colors</h3>
+        <div class="color-picker">
+          <div class="color-item">
+            <div class="color-preview" id="primaryPreview"></div>
+            <label><i class="fas fa-square" style="color: #121e2c"></i> Primary Color:</label>
+            <input type="color" id="primaryColor" class="color-input" value="#121e2c">
+          </div>
+          <div class="color-item">
+            <div class="color-preview" id="secondaryPreview"></div>
+            <label><i class="fas fa-square" style="color: #0d1520"></i> Secondary Color:</label>
+            <input type="color" id="secondaryColor" class="color-input" value="#0d1520">
+          </div>
+          <div class="color-item">
+            <div class="color-preview" id="accentPreview"></div>
+            <label><i class="fas fa-square" style="color: #1a2839"></i> Accent Color:</label>
+            <input type="color" id="accentColor" class="color-input" value="#1a2839">
+          </div>
+          <div class="color-item">
+            <div class="color-preview" id="textPreview"></div>
+            <label><i class="fas fa-font" style="color: #b8c7d9"></i> Text Color:</label>
+            <input type="color" id="textColor" class="color-input" value="#b8c7d9">
+          </div>
+          <div class="color-item">
+            <div class="color-preview" id="borderPreview"></div>
+            <label><i class="fas fa-border-style" style="color: #6d8aab"></i> Border Color:</label>
+            <input type="color" id="borderColor" class="color-input" value="#6d8aab">
+          </div>
+        </div>
+        <p><i class="fas fa-save"></i> Changes are automatically saved.</p>
+      </section>
+      <section id="specialSection" class="hidden">
+        <h2><i class="fas fa-star"></i> Arras Server Status</h2>
+        <p><i class="fas fa-sync-alt"></i> Loading server information from external source...</p>
+        <iframe src="https://trappercloser.github.io/Arras-Server-Thingy/" title="Arras Server Status" allowfullscreen></iframe>
+      </section>
+      <footer><i class="fas fa-code"></i> Made by testing</footer>
+    </div>
+  </body>
+</html>
