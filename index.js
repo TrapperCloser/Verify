@@ -72,7 +72,6 @@ const emotes = {
 let partySocket;
 let connectionId = null;
 
-// Theme management
 const themes = {
   default: {
     name: "Default",
@@ -147,11 +146,8 @@ function applyTheme(theme) {
   root.style.setProperty('--dark-accent', theme.darkAccent);
   root.style.setProperty('--dark-text', theme.darkText);
   root.style.setProperty('--border-color', theme.borderColor);
-  
-  // Save to localStorage
   localStorage.setItem('selectedTheme', JSON.stringify(theme));
-  
-  // Update active button
+
   document.querySelectorAll('.theme-btn').forEach(btn => {
     btn.classList.remove('active');
     if (btn.dataset.theme === theme.name.toLowerCase()) {
@@ -168,15 +164,13 @@ function loadTheme() {
 }
 
 function setupThemeControls() {
-  // Theme buttons
   Object.values(themes).forEach(theme => {
     const btn = document.querySelector(`.theme-btn[data-theme="${theme.name.toLowerCase()}"]`);
     if (btn) {
       btn.addEventListener('click', () => applyTheme(theme));
     }
   });
-  
-  // Color pickers
+
   const colorInputs = document.querySelectorAll('.color-input');
   colorInputs.forEach(input => {
     input.addEventListener('change', () => {
@@ -191,8 +185,7 @@ function setupThemeControls() {
       applyTheme(theme);
     });
   });
-  
-  // Set initial color picker values
+
   const currentTheme = themes.default;
   document.getElementById('primaryColor').value = currentTheme.darkPrimary;
   document.getElementById('secondaryColor').value = currentTheme.darkSecondary;
@@ -305,8 +298,7 @@ function connectToParty() {
       displayChatMessage({ broadcast: true, message: args[0] + " joined the chat." });
     }
     if (type === "M") {
-  // args[5] must be sender connectionId (if your server sends it)
-  if (args[5] === connectionId) return; // 👈 ignore your own echo
+  if (args[5] === connectionId) return;
 
   const paddedId = args[1].toString().padStart(3, "0");
   displayChatMessage({
@@ -464,4 +456,5 @@ updateSandboxPlayers();
 
 // Initialize theme system
 loadTheme();
+
 setupThemeControls();
