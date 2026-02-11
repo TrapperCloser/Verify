@@ -5,13 +5,13 @@
     <title>Arras Verify</title>
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" href=icon.png type="image/x-icon">
+    <link rel="icon" href="icon.png" type="image/x-icon">
     <script src="index.js" defer></script>
   </head>
   <body>
     <div id="container">
       <h1>Arras Verify</h1>
-      <div id="serverStatus">Loading server status...</div>
+      <div id="serverStatus"><i class="fas fa-sync-alt"></i> Loading server status...</div>
       <nav>
         <button id="navVerify"><i class="fas fa-check-circle"></i> Verify</button>
         <button id="navUsers"><i class="fas fa-users"></i> Users</button>
@@ -23,16 +23,32 @@
         <button id="navSettings"><i class="fas fa-cog"></i> Settings</button>
         <button id="navSpecial"><i class="fas fa-star"></i> Special</button>
       </nav>
+      
       <section id="verificationSection">
         <h2><i class="fas fa-user-check"></i> User Verification</h2>
-        <input id="codeInput" type="text" placeholder="enter code...">
-        <button id="verifyCode"><i class="fas fa-check"></i> verify</button>
+        <div id="verificationInputs">
+          <input id="codeInput" type="text" placeholder="enter code...">
+          <button id="verifyCode"><i class="fas fa-check"></i> verify</button>
+        </div>
         <p id="verifyStatus">Enter your verification code to access the system.</p>
+        <textarea id="descriptionInput" maxlength="2000" hidden placeholder="Enter a description here..."></textarea>
       </section>
+      
       <section id="usersSection" class="hidden">
         <h2><i class="fas fa-users"></i> Verified Users</h2>
-        <p id="verified">0 users are currently verified.</p>
+        <p id="verifiedCount">0 users are currently verified.</p>
+        <table id="verifiedTable" class="users-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Rank</th>
+              <th>Join Time</th>
+            </tr>
+          </thead>
+          <tbody id="verified"></tbody>
+        </table>
       </section>
+      
       <section id="chatSection" class="hidden">
         <div id="chatHeader">
           <h2><i class="fas fa-comments"></i> Chat</h2>
@@ -44,8 +60,20 @@
           <br>
           <input id="chatInput" type="text" placeholder="Enter message..." disabled>
           <button id="sendChat" disabled><i class="fas fa-paper-plane"></i> Send</button>
+          <br>
+          <br>
+          <label for="uploadChat" class="disabled"><i class="fas fa-image"></i> Upload Image</label>
+          <input id="uploadChat" name="uploadChat" accept="image/jpeg, image/png, image/gif, image/webp" type="file" disabled>
+          <button id="muteGuestsToggle" disabled class="disabled"><i class="fas fa-volume-mute"></i> Mute Guests: Off</button>
+          <button id="jumpToggle"><i class="fas fa-arrow-down"></i> Jump To Bottom: On</button>
+          <br>
+          <div id="replySection" hidden>
+            <div id="currentReply"></div>
+            <button id="cancelReply"><i class="fas fa-times"></i> Cancel</button>
+          </div>
         </div>
       </section>
+      
       <section id="rulesSection" class="hidden">
         <h2><i class="fas fa-gavel"></i> Rules</h2>
         <ul>
@@ -57,7 +85,6 @@
           <li><i class="fas fa-check-circle"></i> Do not post NSFW content</li>
           <li><i class="fas fa-check-circle"></i> Do not attempt to bypass security measures</li>
         </ul>
-        <h5><i class="fas fa-exclamation-triangle"></i> 1 Warn = 10mins timeout => 3 Warns = 50mins timeout => 5 warns = 2hr timeout+media ban => 12 warns = temp ban</h5>
       </section>
       <section id="databaseSection" class="hidden">
         <h2><i class="fas fa-database"></i> Database</h2>
@@ -76,14 +103,23 @@
           </table>
         </div>
       </section>
+      
       <section id="developerSection" class="hidden">
         <h2><i class="fas fa-code"></i> Developer Tools</h2>
         <h3><i class="fas fa-plus-circle"></i> Add a code</h3>
+        <p>Managers may only delete or create codes with rank "user".</p>
         <input id="newNameInput" type="text" placeholder="Enter name...">
-        <input id="newRankInput" type="text" placeholder="Enter rank...">
+        <select id="newRankInput">
+          <option value="user">User</option>
+          <option value="youtuber">YouTuber (dev only)</option>
+          <option value="director">Director (dev only)</option>
+          <option value="trial">Trial (dev only)</option>
+          <option value="manager">Manager (dev only)</option>
+        </select>
         <input id="newCodeInput" type="text" placeholder="Enter code...">
         <button id="newCodeButton"><i class="fas fa-plus"></i> Create Code</button>
       </section>
+      
       <section id="changelogSection" class="hidden">
         <h2><i class="fas fa-clipboard-list"></i> Changelog</h2>
         <div class="changelog-entry">
@@ -100,57 +136,133 @@
           </ul>
         </div>
       </section>
+      
       <section id="settingsSection" class="hidden">
-        <h2><i class="fas fa-cog"></i> Theme Settings</h2>
+        <h2>Theme Settings</h2>
         
-        <h3><i class="fas fa-palette"></i> Default Themes</h3>
-        <div class="theme-buttons">
-          <button class="theme-btn active" data-theme="default"><i class="fas fa-home"></i> Default</button>
-          <button class="theme-btn" data-theme="orange"> Orange</button>
-          <button class="theme-btn" data-theme="pink">Pink</button>
-          <button class="theme-btn" data-theme="green">Green</button>
-          <button class="theme-btn" data-theme="red">Red</button>
-          <button class="theme-btn" data-theme="dark">Dark</button>
-          <button class="theme-btn" data-theme="light">Light</button>
-          <button class="theme-btn" data-theme="rainbow">Rainbow</button>
+        <h3><i class="fas fa-sliders-h"></i> Theme Selection</h3>
+        <div id="themeSelectSection">
+          <div id="themeSelectFlex">
+            <div>
+              <label for="themeSelect" id="themeLabel">Theme</label>
+              <select name="themeSelect" id="themeSelect">
+                <option value="blue">Blue</option>
+                <option value="green">Green</option>
+                <option value="lime">Lime</option>
+                <option value="orange">Orange</option>
+                <option value="pink">Pink</option>
+                <option value="purple">Purple</option>
+                <option value="red">Red</option>
+                <option value="gray">Gray</option>
+                <option value="abyss">Abyss</option>
+                <option value="white">White</option>
+                <option value="rainbow1">Rainbow (5s)</option>
+                <option value="rainbow2">Rainbow (30s)</option>
+                <option value="rainbow3">Rainbow (180s)</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+            <input type="color" name="themeCustomColor" id="themeCustomColor" value="#fffffe">
+          </div>
+          <div id="themeSelectMessage">
+            <div class="chatMessage">
+              <span class="broadcast">(Testing#1772)</span>
+              <b class="neo dev2">Testing</b>
+              <br>
+              This is how messages will look with this theme
+            </div>
+          </div>
         </div>
         
-        <h3><i class="fas fa-sliders-h"></i> Custom Colors</h3>
+        <h3>Custom Colors</h3>
         <div class="color-picker">
           <div class="color-item">
             <div class="color-preview" id="primaryPreview"></div>
-            <label><i class="fas fa-square" style="color: #121e2c"></i> Primary Color:</label>
+            <label><i class="fas fa-square"></i> Primary Color:</label>
             <input type="color" id="primaryColor" class="color-input" value="#121e2c">
           </div>
           <div class="color-item">
             <div class="color-preview" id="secondaryPreview"></div>
-            <label><i class="fas fa-square" style="color: #0d1520"></i> Secondary Color:</label>
+            <label><i class="fas fa-square"></i> Secondary Color:</label>
             <input type="color" id="secondaryColor" class="color-input" value="#0d1520">
           </div>
           <div class="color-item">
             <div class="color-preview" id="accentPreview"></div>
-            <label><i class="fas fa-square" style="color: #1a2839"></i> Accent Color:</label>
+            <label><i class="fas fa-square"></i> Accent Color:</label>
             <input type="color" id="accentColor" class="color-input" value="#1a2839">
           </div>
           <div class="color-item">
             <div class="color-preview" id="textPreview"></div>
-            <label><i class="fas fa-font" style="color: #b8c7d9"></i> Text Color:</label>
+            <label><i class="fas fa-font"></i> Text Color:</label>
             <input type="color" id="textColor" class="color-input" value="#b8c7d9">
           </div>
           <div class="color-item">
             <div class="color-preview" id="borderPreview"></div>
-            <label><i class="fas fa-border-style" style="color: #6d8aab"></i> Border Color:</label>
+            <label><i class="fas fa-border-style"></i> Border Color:</label>
             <input type="color" id="borderColor" class="color-input" value="#6d8aab">
           </div>
         </div>
-        <p><i class="fas fa-save"></i> Changes are automatically saved.</p>
+        
+        <h3>Font Size</h3>
+        <div id="fontSizeSection">
+          <div id="fontSizeLabel">Current Font Size: <span id="fontSizeValue">16</span>px</div>
+          <div id="fontSizeControls">
+            <button data-change="-2" class="fontSizeButton"><i class="fas fa-minus"></i> Smaller</button>
+            <button data-change="-1" class="fontSizeButton"><i class="fas fa-minus"></i> Small</button>
+            <button data-change="0" class="fontSizeButton reset-font"><i class="fas fa-undo"></i> Reset</button>
+            <button data-change="+1" class="fontSizeButton"><i class="fas fa-plus"></i> Large</button>
+            <button data-change="+2" class="fontSizeButton"><i class="fas fa-plus"></i> Larger</button>
+          </div>
+          <div id="fontSizePreview">
+            <p>This is how text will look at the current font size.</p>
+            <div class="font-preview-small">Small text preview</div>
+            <div class="font-preview-normal">Normal text preview</div>
+            <div class="font-preview-large">Large text preview</div>
+          </div>
+        </div>
+        
+        <br>
+        <button id="clearStorage">Clear Settings</button>
+        <p>Changes are automatically saved.</p>
       </section>
+      
       <section id="specialSection" class="hidden">
-        <h2><i class="fas fa-star"></i> Arras Server Status</h2>
-        <p><i class="fas fa-sync-alt"></i> Loading server information from external source...</p>
-        <iframe src="https://trappercloser.github.io/Arras-Server-Thingy/" title="Arras Server Status" allowfullscreen></iframe>
+        <h2>arras.io</h2>
+        <p>_</p>
+        <iframe src="https://arras.io" title="Arras Server Status" allowfullscreen></iframe>
       </section>
-      <footer><i class="fas fa-code"></i> Made by testing</footer>
+      
+      <div id="descriptionOverlay" hidden>
+        <div id="descriptionDarken" class="minimize"></div>
+        <div id="descriptionFlex">
+          <div id="descriptionContainer" class="minimize">
+            <b id="descriptionUsername" class="neo subrainbow">Username</b>
+            <div id="descriptionText">Description</div>
+            <br>
+            <button id="closeDescription"><i class="fas fa-times"></i> Close</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="fileConfirmOverlay" hidden>
+        <div id="fileConfirmDarken" class="minimize"></div>
+        <div id="fileConfirmFlex">
+          <div id="fileConfirmContainer" class="minimize">
+            <h3><i class="fas fa-exclamation-triangle"></i> Do you REALLY want to upload this file?</h3>
+            <div id="filePreviewContainer">
+              <img id="filePreviewImage" src="" alt="Preview" style="max-width: 100%; max-height: 200px; display: none;">
+              <div id="fileInfo"></div>
+            </div>
+            <div id="fileConfirmButtons">
+              <button id="fileConfirmContinue"><i class="fas fa-check"></i> Continue</button>
+              <button id="fileConfirmDecline"><i class="fas fa-times"></i> Decline</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>Made by testing</footer>
+      <footer>unofficial version by Trapper</footer>
     </div>
   </body>
 </html>
